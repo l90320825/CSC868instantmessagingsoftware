@@ -1,4 +1,3 @@
-import ch.qos.logback.classic.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -6,8 +5,7 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.List;
 
-
-public class ServerHelper extends Thread {
+public class ServerWorker extends Thread {
 
     private final Socket clientSocket;
     private final Server server;
@@ -15,7 +13,7 @@ public class ServerHelper extends Thread {
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
 
-    public ServerHelper(Server server, Socket clientSocket) {
+    public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
         this.clientSocket = clientSocket;
     }
@@ -89,8 +87,8 @@ public class ServerHelper extends Thread {
 
         boolean isTopic = sendTo.charAt(0) == '#';
 
-        List<ServerHelper> workerList = server.getWorkerList();
-        for(ServerHelper worker : workerList) {
+        List<ServerWorker> workerList = server.getWorkerList();
+        for(ServerWorker worker : workerList) {
             if (isTopic) {
                 if (worker.isMemberOfTopic(sendTo)) {
                     String outMsg = "messaging " + sendTo + ":" + login + " " + body + "\n";
@@ -107,11 +105,11 @@ public class ServerHelper extends Thread {
 
     private void handleLogoff() throws IOException {
         server.removeWorker(this);
-        List<ServerHelper> workerList = server.getWorkerList();
+        List<ServerWorker> workerList = server.getWorkerList();
 
         // send other online users current user's status
         String onlineMsg = login + " is offline " + "\n";
-        for(ServerHelper worker : workerList) {
+        for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
             }
@@ -132,15 +130,15 @@ public class ServerHelper extends Thread {
                 String msg = "logging in\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
-                System.out.println("User logged in succesfully: " + login);
+                System.out.println("User logged in successfully: " + login);
 
-                List<ServerHelper> workerList = server.getWorkerList();
+                List<ServerWorker> workerList = server.getWorkerList();
 
                 // send current user all other online logins
-                for(ServerHelper worker : workerList) {
+                for(ServerWorker worker : workerList) {
                     if (worker.getLogin() != null) {
                         if (!login.equals(worker.getLogin())) {
-                            String msg2 = "Getting online " + worker.getLogin() + "\n";
+                            String msg2 = "getting online " + worker.getLogin() + "\n";
                             send(msg2);
                         }
                     }
@@ -148,7 +146,7 @@ public class ServerHelper extends Thread {
 
                 // send other online users current user's status
                 String onlineMsg = login + " is online " + "\n";
-                for(ServerHelper worker : workerList) {
+                for(ServerWorker worker : workerList) {
                     if (!login.equals(worker.getLogin())) {
                         worker.send(onlineMsg);
                     }
