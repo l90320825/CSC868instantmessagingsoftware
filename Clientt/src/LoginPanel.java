@@ -145,22 +145,22 @@ public class LoginPanel extends javax.swing.JFrame {
     
     private void doLogin() {
         String login = jTextField3.getText();
-        String password = jTextField4.getText();
+        String username = jTextField4.getText();
         
        // MainFrame2 j = new MainFrame2(client, login);
 
     try {
            // if (client.login(login, password)) {
         	
-            	 if (client.login(login, password)) {
+            	 if (client.login(username, username)) {
                 // bring up the user list window
-            	MainFrame j = new MainFrame(client, login);//Main frame include userlist and message panel
+            	MainFrame j = new MainFrame(client, username);//Main frame include userlist and message panel
                
                // j.run();
                 setVisible(false);
             } else {
                 // show error message
-                JOptionPane.showMessageDialog(this, "Invalid login/password.");
+                JOptionPane.showMessageDialog(this, "Invalid IP/Username.");
             }
         } catch (IOException e) {
             e.printStackTrace();

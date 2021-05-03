@@ -12,6 +12,7 @@ public class ServerWorker extends Thread {
     private String login = null;
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
+    public final static int FILE_SIZE = 6022386;
 
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
@@ -57,7 +58,36 @@ public class ServerWorker extends Thread {
                     handleLeave(tokens);
                 }  else if ("list".equalsIgnoreCase(cmd)) {
                 	sendUserList(outputStream, tokens);
-                }
+                } else if ("sendFile".equalsIgnoreCase(cmd)) {
+                	String sendTo = tokens[1];
+                	String fileName = tokens[2];
+                	
+                	int bytesRead = 0;
+                	System.out.println("Ready to accpet file");
+                	byte [] mybytearray  = new byte [FILE_SIZE];
+                	
+                	bytesRead = inputStream.read(mybytearray,0,mybytearray.length);
+                	System.out.println(bytesRead);
+                    int current = bytesRead;
+                    List<ServerWorker> workerList = server.getWorkerList();
+                    String body = "you have a file " + fileName;
+                    for(ServerWorker worker : workerList) {
+                    	if (sendTo.equalsIgnoreCase(worker.getLogin())) {
+                    
+                    	String outMsg = "fmsg " + login + " " + body + "\n";
+                        worker.send(outMsg);
+                       
+                        worker.send(mybytearray);
+                        
+                        
+                        
+                    	}
+                    	
+                        // worker.send(mybytearray);
+                     }
+                    }
+                	//sendUserList(outputStream, tokens);
+               
                 else {
                     String msg = "unknown " + cmd + "\n";
                     outputStream.write(msg.getBytes());
@@ -66,6 +96,11 @@ public class ServerWorker extends Thread {
         }
 
         clientSocket.close();
+    }
+    
+    private void handleFile (String[] tokens) {
+    	
+    	
     }
 
     private void handleLeave(String[] tokens) {
@@ -199,6 +234,17 @@ public class ServerWorker extends Thread {
         if (login != null) {
             try {
                 outputStream.write(msg.getBytes());
+                outputStream.flush();
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    private void send(byte [] msg) throws IOException {
+        if (login != null) {
+            try {
+                outputStream.write(msg);
             } catch(Exception ex) {
                 ex.printStackTrace();
             }

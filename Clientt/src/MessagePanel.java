@@ -3,9 +3,16 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MessagePanel extends javax.swing.JPanel  implements MessageListener  {
 
@@ -84,7 +91,7 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
             public void actionPerformed(ActionEvent e) {
                 try {
                     String text = jTextField1.getText();
-                    client.msg(login, text);
+                    client.msg(target, text);
                     listModel.addElement("You: " + text);
                     jTextField1.setText("");
                 } catch (IOException e1) {
@@ -100,11 +107,52 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
-    }
+    	  try {
+              JFileChooser chooser = new JFileChooser();
+              FileNameExtensionFilter filter = new FileNameExtensionFilter(
+            	        "JPG & GIF Images", "jpg", "gif", "txt");
+              chooser.setFileFilter(filter);
+              
+              int c = chooser.showOpenDialog(this);
+              if (c == JFileChooser.APPROVE_OPTION) {
+            	  JOptionPane.showMessageDialog(this, "Sending " +
+            	            chooser.getSelectedFile().getName());
+                  File myFile = chooser.getSelectedFile();
+                  byte [] mybytearray  = new byte [(int)myFile.length()];
+                  FileInputStream fis = new FileInputStream(myFile);
+                  BufferedInputStream bis = new BufferedInputStream(fis);
+                  bis.read(mybytearray,0,mybytearray.length); //Write file byte to mybytearray
+                  client.sendFile(mybytearray, target, chooser.getSelectedFile().getName());
+                  listModel.addElement("Send file: " + chooser.getSelectedFile().getName());
+                 // OutputStream os = sock.getOutputStream();
+                  System.out.println("Sending " + chooser.getSelectedFile().getName() + "(" + (int)myFile.length() + " bytes)");
+                //  os.write(mybytearray,0,mybytearray.length);
+                //  os.flush();
+                  System.out.println("Done.");
+                  
+                  
+                  
+                  /*FileInputStream in = new FileInputStream(f);
+                  byte b[] = new byte[in.available()];
+                  in.read(b);
+                  Data data = new Data();
+                  data.setStatus(jComboBox1.getSelectedItem() + "");
+                  data.setName(txtName.getText().trim());
+                  data.setFile(b);
+                  out.writeObject(data);
+                  out.flush();
+                  txt.append("send 1 file ../n");*/
+              }
+          } catch (Exception e) {
+              JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
+          }
+          // TODO add your handling code here:
+      }//GEN-LAST:event_jButton2ActionPerformed
+    
     
     public void setCL(ChatClient client, String login) {
     	this.client = client;
-    	this.login = login;
+    	this.target = login;
     }
     
     public void run() {
@@ -120,14 +168,26 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
     @Override
     public void onMessage(String fromLogin, String msgBody) {
     	System.out.println("Recevied message");
-        if (login.equalsIgnoreCase(fromLogin)) {
+        if (target.equalsIgnoreCase(fromLogin)) {
             String line = fromLogin + ": " + msgBody;
             listModel.addElement(line);
         }
     }
     
+    /*
+    
+    @Override
+    public void online(String login) {
+       
+    }
+
+    @Override
+    public void offline(String login) {
+       
+    }*/
+    
     private ChatClient client;
-    private String login;
+    private String target;
     private DefaultListModel<String> listModel = new DefaultListModel<>();
     // Variables declaration - do not modify                     
     private javax.swing.JButton jButton1;
