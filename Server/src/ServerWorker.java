@@ -2,9 +2,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-
+/**
+ * Tianchen Liu
+ */
 public class ServerWorker extends Thread {
 
     private final Socket clientSocket;
@@ -151,7 +155,8 @@ public class ServerWorker extends Thread {
         List<ServerWorker> workerList = server.getWorkerList();
 
         // send other online users current user's status
-        String onlineMsg = "offline " + login + "\n";
+        SimpleDateFormat formatter = new SimpleDateFormat(" MM-dd-yyyy HH:mm:ss");
+        String onlineMsg = login + " logged off on " + formatter.format(new Date()) + "\n";
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
@@ -192,16 +197,17 @@ public class ServerWorker extends Thread {
     }
 
     private void handleLogin(OutputStream outputStream, String[] tokens) throws IOException {
+        SimpleDateFormat formatter = new SimpleDateFormat(" MM-dd-yyyy HH:mm:ss");
         if (tokens.length == 3) {
             String login = tokens[1];
             String password = tokens[2];
 
            // if ((login.equals("guest") && password.equals("guest")) || (login.equals("jim") && password.equals("jim")) ) {
             if ((login.equals(password)) ) {
-                String msg = "ok login\n";
+                String msg = "login ok\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
-                System.out.println("User logged in succesfully: " + login);
+                System.out.println(login + " has successfully logged in at" + formatter.format(new Date()));
 
                 List<ServerWorker> workerList = server.getWorkerList();
 

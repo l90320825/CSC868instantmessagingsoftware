@@ -1,10 +1,14 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-
+/**
+ * Tianchen Liu
+ */
 public class Server extends Thread {
     private final int serverPort;
 
@@ -22,10 +26,11 @@ public class Server extends Thread {
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(serverPort);
+            SimpleDateFormat formatter = new SimpleDateFormat(" MM-dd-yyyy HH:mm:ss");
             while(true) {
-                System.out.println("About to accept client connection...");
+                System.out.println("Accepting client connection...");
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Accepted connection from " + clientSocket);
+                System.out.println("Accepted connection from " + clientSocket + formatter.format(new Date()));
                 ServerWorker worker = new ServerWorker(this, clientSocket);
                 workerList.add(worker);
                 worker.start();
