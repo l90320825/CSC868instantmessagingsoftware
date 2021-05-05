@@ -155,8 +155,9 @@ public class ServerWorker extends Thread {
         List<ServerWorker> workerList = server.getWorkerList();
 
         // send other online users current user's status
+        String onlineMsg = "offline " + login + "\n";
         SimpleDateFormat formatter = new SimpleDateFormat(" MM-dd-yyyy HH:mm:ss");
-        String onlineMsg = login + " logged off on " + formatter.format(new Date()) + "\n";
+//        String onlineMsg = login + " logged off on " + formatter.format(new Date()) + "\n";
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
