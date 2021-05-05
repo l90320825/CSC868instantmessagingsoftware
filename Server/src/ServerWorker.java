@@ -204,7 +204,7 @@ public class ServerWorker extends Thread {
 
            // if ((login.equals("guest") && password.equals("guest")) || (login.equals("jim") && password.equals("jim")) ) {
             if ((login.equals(password)) ) {
-                String msg = "login ok\n";
+                String msg = "ok login\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
                 System.out.println(login + " has successfully logged in at" + formatter.format(new Date()));
