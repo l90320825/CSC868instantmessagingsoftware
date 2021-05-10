@@ -6,7 +6,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame(ChatClient client, String name) {
     	jPanel1 = new UserListPanel(jPanel2, client, name);
-    	this.setTitle("welcome");
+    	this.setTitle("Welcome " + name);
         initComponents();
         jPanel2.setVisible(false);
         this.setVisible(true);

@@ -21,6 +21,7 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
      */
     public MessagePanel() {
         initComponents();
+       
     }
 
     /**
@@ -36,6 +37,7 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>(listModel);
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(500, 600));
 
@@ -54,6 +56,8 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
                 jButton1ActionPerformed(evt);
             }
         });
+        
+        jLabel1.setText("Chatting with:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -63,6 +67,10 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
                 .addContainerGap(433, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                    .addGap(24, 24, 24)
+                    .addComponent(jLabel1)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(20, 20, 20)
@@ -74,7 +82,8 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(548, Short.MAX_VALUE)
+            		 .addComponent(jLabel1)
+                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 533, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(29, 29, 29))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -91,9 +100,11 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
             public void actionPerformed(ActionEvent e) {
                 try {
                     String text = jTextField1.getText();
+                    if(!text.isBlank()) {
                     client.msg(target, text);
                     listModel.addElement("You: " + text);
                     jTextField1.setText("");
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -161,6 +172,7 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
     	}
     	this.client.addMessageListener(this);
     	listModel.removeAllElements();
+    	 jLabel1.setText("Chatting with: " + target);
     	
 
     }
@@ -194,6 +206,7 @@ public class MessagePanel extends javax.swing.JPanel  implements MessageListener
     private javax.swing.JList<String> jList2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration                   
 }
 
