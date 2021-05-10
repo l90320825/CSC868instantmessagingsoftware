@@ -17,6 +17,7 @@ public class ServerWorker extends Thread {
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
     public final static int FILE_SIZE = 6022386;
+    private MongoClient mongodbase;
 
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
@@ -144,6 +145,7 @@ public class ServerWorker extends Thread {
                 if (sendTo.equalsIgnoreCase(worker.getLogin())) {
                     String outMsg = "msg " + login + " " + body + "\n";
                     worker.send(outMsg);
+                    mongodbase.directmessagecollection.insertOne({ message:body, sender:login, reciever:sendTo, timestamps: true});
                 }
             }
         }
@@ -152,12 +154,13 @@ public class ServerWorker extends Thread {
     private void handleLogoff() {
     	try {
         server.removeWorker(this);
+        mongodbase.userscollection.deleteOne(eq("username", login));
         List<ServerWorker> workerList = server.getWorkerList();
 
         // send other online users current user's status
         String onlineMsg = "offline " + login + "\n";
         SimpleDateFormat formatter = new SimpleDateFormat(" MM-dd-yyyy HH:mm:ss");
-//        String onlineMsg = login + " logged off on " + formatter.format(new Date()) + "\n";
+        // String onlineMsg = login + " logged off on " + formatter.format(new Date()) + "\n";
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
@@ -209,7 +212,7 @@ public class ServerWorker extends Thread {
                 outputStream.write(msg.getBytes());
                 this.login = login;
                 System.out.println(login + " has successfully logged in at" + formatter.format(new Date()));
-
+                mongodbase.userscollection.insertOne({username:login});
                 List<ServerWorker> workerList = server.getWorkerList();
 
                 // send current user all other online logins
