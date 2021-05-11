@@ -74,7 +74,7 @@ public class ServerWorker extends Thread {
                 	System.out.println(bytesRead);
                     int current = bytesRead;
                     List<ServerWorker> workerList = server.getWorkerList();
-                    String body = "you have a file " + fileName;
+                    String body = fileName;
                     for(ServerWorker worker : workerList) {
                     	if (sendTo.equalsIgnoreCase(worker.getLogin())) {
                     

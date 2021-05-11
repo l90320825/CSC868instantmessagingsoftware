@@ -5,6 +5,9 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 
 
 public class ChatClient {
@@ -155,21 +158,46 @@ public class ChatClient {
                         System.out.println(tokensMsg[1]);
                         handleMessage(tokensMsg);
                     } else if ("fmsg".equalsIgnoreCase(cmd)) {//on file
+                    	JFrame frame = new JFrame("Swing Tester");
+                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                       
+                        frame.setSize(560, 200);
+                    	JFileChooser chooser = new JFileChooser();
+                    	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    	int c = chooser.showOpenDialog(frame);
+                    	
                     	System.out.println("fmsg recevied");
-                    	System.out.println(line);
+                    	
                         String[] tokensMsg = StringUtils.split(line, null, 3);
                         
                         System.out.println(tokensMsg[1]);
-                        handleMessage(tokensMsg);
+                      
                         
                         
                         
-                        byte [] mybytearray  = new byte [FILE_SIZE];
-                        FileOutputStream fos = new FileOutputStream(FILE_TO_RECEIVED);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos);
+                        byte [] mybytearray  = new byte [1000];
+                        
                         int bytesRead = serverIn.read(mybytearray,0,mybytearray.length);
                         System.out.println("recevied " + bytesRead);
-                        bos.write(mybytearray, 0 , bytesRead);
+                        
+                        if(c == JFileChooser.APPROVE_OPTION) {
+                        	String dir = chooser.getSelectedFile().getAbsolutePath();
+                        	dir = dir + "\\" + tokensMsg[2];
+                        	System.out.println(dir);
+                        	
+                        	handleMessage(tokensMsg);
+                        	
+                        	
+                        	
+                        	FileOutputStream fos = new FileOutputStream(dir);
+                        	BufferedOutputStream bos = new BufferedOutputStream(fos);
+                        
+                        	bos.write(mybytearray, 0 , 1000);
+                        	//bos.close();
+                        	fos.close();
+                        
+                        
+                        }
                     }
                 }
             }
