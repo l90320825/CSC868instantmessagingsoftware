@@ -67,7 +67,7 @@ public class ServerWorker extends Thread {
                 	String fileName = tokens[2];
                 	
                 	int bytesRead = 0;
-                	System.out.println("Ready to accpet file");
+                	System.out.println("Ready to accept file");
                 	byte [] mybytearray  = new byte [FILE_SIZE];
                 	
                 	bytesRead = inputStream.read(mybytearray,0,mybytearray.length);
@@ -208,6 +208,8 @@ public class ServerWorker extends Thread {
                 String msg = "ok login\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
+                String outmsg = login + " has successfully logged in at" + formatter.format(new Date());
+                server.serverPanel.adding(outmsg);
                 System.out.println(login + " has successfully logged in at" + formatter.format(new Date()));
 
                 List<ServerWorker> workerList = server.getWorkerList();

@@ -22,7 +22,7 @@ public class ServerPanel extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    public void initComponents() {
 
         ButtonPanel = new javax.swing.JPanel();
         StartButton = new javax.swing.JButton();
@@ -37,7 +37,7 @@ public class ServerPanel extends javax.swing.JFrame {
         StartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Server server = new Server(8818);
+                Server server = new Server(8818, myself);
                 server.start();
             }
         });
@@ -61,8 +61,6 @@ public class ServerPanel extends javax.swing.JFrame {
         MessageTextArea.setColumns(20);
         MessageTextArea.setRows(5);
         jScrollPane1.setViewportView(MessageTextArea);
-        MessageTextArea.append("hello 1\n");
-        MessageTextArea.append("hello 2\n");
 
         javax.swing.GroupLayout MessagesPanelLayout = new javax.swing.GroupLayout(MessagesPanel);
         MessagesPanel.setLayout(MessagesPanelLayout);
@@ -100,6 +98,9 @@ public class ServerPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 
+    public void adding(String msg){
+        MessageTextArea.append(msg);
+    }
     /**
      * @param args the command line arguments
      */
@@ -131,12 +132,15 @@ public class ServerPanel extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ServerPanel().setVisible(true);
+                myself = new ServerPanel();
+                myself.setVisible(true);
+
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    static public ServerPanel myself;
     private javax.swing.JPanel ButtonPanel;
     private javax.swing.JTextArea MessageTextArea;
     private javax.swing.JPanel MessagesPanel;

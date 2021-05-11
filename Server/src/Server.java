@@ -10,8 +10,15 @@ import java.util.List;
  * Tianchen Liu
  */
 public class Server extends Thread {
-    private final int serverPort;
 
+
+    private final int serverPort;
+    public ServerPanel serverPanel;
+
+    public Server(int serverPort, ServerPanel serverPanel){
+        this.serverPort = serverPort;
+        this.serverPanel = serverPanel;
+    }
     private ArrayList<ServerWorker> workerList = new ArrayList<>();
 
     public Server(int serverPort) {
