@@ -1,12 +1,10 @@
-
+package Clientt.src;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 
 
 
@@ -19,7 +17,7 @@ public class ChatClient {
     private BufferedReader bufferedIn;
     public final static String
     FILE_TO_RECEIVED = "c:/Users/johnt/Desktop/New folder/a7.jpg";
-    public final static int FILE_SIZE = 6022386;
+    //public final static int FILE_SIZE = 6022386;
 
     private ArrayList<UserStatusListener> userStatusListeners = new ArrayList<>();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
@@ -158,6 +156,8 @@ public class ChatClient {
                         System.out.println(tokensMsg[1]);
                         handleMessage(tokensMsg);
                     } else if ("fmsg".equalsIgnoreCase(cmd)) {//on file
+                        String[] tokensMsg = StringUtils.split(line, null, 4);
+                        int size = Integer.parseInt(tokensMsg[3]);
                     	JFrame frame = new JFrame("Swing Tester");
                         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                        
@@ -168,16 +168,20 @@ public class ChatClient {
                     	
                     	System.out.println("fmsg recevied");
                     	
-                        String[] tokensMsg = StringUtils.split(line, null, 3);
+                        //String[] tokensMsg = StringUtils.split(line, null, 3);
                         
                         System.out.println(tokensMsg[1]);
                       
                         
                         
                         
-                        byte [] mybytearray  = new byte [1000];
+                        byte [] mybytearray  = new byte [size];
                         
                         int bytesRead = serverIn.read(mybytearray,0,mybytearray.length);
+                        for (int i = 0; i < bytesRead; i++){
+                            System.out.println("This is the received bytes in chatclient");
+                            System.out.println(mybytearray[i]);
+                        }
                         System.out.println("recevied " + bytesRead);
                         
                         if(c == JFileChooser.APPROVE_OPTION) {
@@ -192,8 +196,8 @@ public class ChatClient {
                         	FileOutputStream fos = new FileOutputStream(dir);
                         	BufferedOutputStream bos = new BufferedOutputStream(fos);
                         
-                        	bos.write(mybytearray, 0 , 1000);
-                        	//bos.close();
+                        	bos.write(mybytearray, 0 , size);
+                        	bos.close();
                         	fos.close();
                         
                         

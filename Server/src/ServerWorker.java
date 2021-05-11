@@ -16,7 +16,7 @@ public class ServerWorker extends Thread {
     private String login = null;
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
-    public final static int FILE_SIZE = 6022386;
+    public final static int FILE_SIZE = 602238600;
 
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
@@ -71,14 +71,21 @@ public class ServerWorker extends Thread {
                 	byte [] mybytearray  = new byte [FILE_SIZE];
                 	
                 	bytesRead = inputStream.read(mybytearray,0,mybytearray.length);
-                	System.out.println(bytesRead);
+
+                	for (int i = 0; i < bytesRead; i++){
+                	    System.out.println("This is the original bytes");
+                	    System.out.println(mybytearray[i]);
+                    }
+                    System.out.println(bytesRead);
+//                	System.out.println("Converted");
+//                	System.out.println(new String(mybytearray));
                     int current = bytesRead;
                     List<ServerWorker> workerList = server.getWorkerList();
                     String body = fileName;
                     for(ServerWorker worker : workerList) {
                     	if (sendTo.equalsIgnoreCase(worker.getLogin())) {
                     
-                    	String outMsg = "fmsg " + login + " " + body + "\n";
+                    	String outMsg = "fmsg " + login + " " + body + " " + current + "\n";
                         worker.send(outMsg);
                        
                         worker.send(mybytearray);
