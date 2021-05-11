@@ -16,7 +16,7 @@ public class ServerWorker extends Thread {
     private String login = null;
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
-    public final static int FILE_SIZE = 602238600;
+    public final static int FILE_SIZE = 6022386;
 
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
