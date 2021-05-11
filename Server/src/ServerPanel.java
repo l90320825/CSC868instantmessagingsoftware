@@ -134,6 +134,7 @@ public class ServerPanel extends javax.swing.JFrame {
             public void run() {
                 myself = new ServerPanel();
                 myself.setVisible(true);
+                myself.setTitle("Server log");
 
             }
         });

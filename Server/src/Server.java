@@ -36,8 +36,10 @@ public class Server extends Thread {
             SimpleDateFormat formatter = new SimpleDateFormat(" MM-dd-yyyy HH:mm:ss");
             while(true) {
                 System.out.println("Accepting client connection...");
+                serverPanel.adding("Accepting client connection...\n");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Accepted connection from " + clientSocket + formatter.format(new Date()));
+                serverPanel.adding("Accepted connection from " + clientSocket + " \n at " + formatter.format(new Date()) + "\n");
                 ServerWorker worker = new ServerWorker(this, clientSocket);
                 workerList.add(worker);
                 worker.start();
