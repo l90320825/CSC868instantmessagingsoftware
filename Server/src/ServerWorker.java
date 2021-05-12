@@ -164,7 +164,7 @@ public class ServerWorker extends Thread {
         // send other online users current user's status
         String onlineMsg = "offline " + login + "\n";
         SimpleDateFormat formatter = new SimpleDateFormat(" MM-dd-yyyy HH:mm:ss");
-        String outmsg = login + " has logged off at" + formatter.format(new Date() + "\n");
+        String outmsg = login + " has logged off at" + formatter.format(new Date()) + "\n";
         server.serverPanel.adding(outmsg);
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
